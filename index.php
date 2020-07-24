@@ -21,7 +21,7 @@ Router::get('/', function () {
     (new MotobikeController())->filterByKanaPrefix();
 });
 
-// Database::closeConnection();
+Database::closeConnection();
 
 // $faker = Factory::create();
 
