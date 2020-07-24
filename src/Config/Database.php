@@ -14,12 +14,12 @@ class Database
 
     public static function getInstance()
     {
-        if (!isset(self::$instance))
-        {
-            self::$instance = new Connection(Config::getInstance()->get('Db'));
-        }
+        // if (!isset(self::$instance))
+        // {
+        //     self::$instance = new Connection(Config::getInstance()->get('Db'));
+        // }
 
-        return new Query(self::$instance);
+        // return new Query(self::$instance);
     }
 
     public static function closeConnection()

@@ -48,6 +48,9 @@ class ComposerStaticInit27e7b19945eabfb6bedc868c776b410f
         'D' => 
         array (
             'Doctrine\\Instantiator\\' => 22,
+            'Doctrine\\DBAL\\' => 14,
+            'Doctrine\\Common\\Cache\\' => 22,
+            'Doctrine\\Common\\' => 16,
             'DeepCopy\\' => 9,
         ),
         'A' => 
@@ -108,6 +111,18 @@ class ComposerStaticInit27e7b19945eabfb6bedc868c776b410f
         'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
+        ),
+        'Doctrine\\DBAL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
+        ),
+        'Doctrine\\Common\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
+        'Doctrine\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
         ),
         'DeepCopy\\' => 
         array (

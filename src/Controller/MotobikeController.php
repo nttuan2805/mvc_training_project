@@ -1,22 +1,29 @@
 <?php
 namespace App\Controller;
+
+use App\Config\Connection;
 use App\Config\Database;
-use PDO;
-use PDOException;
+// use PDO;
+// use PDOException;
 
 class MotobikeController
 {
     public function filterByKanaPrefix()
     { 
     
-        $fluent = Database::getInstance();
-        $query = $fluent->from('mst_area')->limit(5);
+        $conn = Connection::getConnection();
+        $queryBuilder = $conn->createQueryBuilder();
+        $queryBuilder = $queryBuilder->select('version()');
+        $version = $queryBuilder->execute()->fetchColumn(0);
+        echo $version . "\n";
+        // $fluent = Database::getInstance();
+        // $query = $fluent->from('mst_area')->limit(5);
 
-        foreach ($query as $row) {
-            echo '<pre>';
-            print_r($row);
-            echo '</pre>';
-        }
+        // foreach ($query as $row) {
+        //     echo '<pre>';
+        //     print_r($row);
+        //     echo '</pre>';
+        // }
     //     try {
     //         $db = Database::getInstance();
     //         $stm = $db->query('SELECT * FROM mst_area limit 1');
