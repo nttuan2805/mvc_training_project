@@ -17,18 +17,18 @@ use Faker\Factory;
 //     ]);
 // });
 
-// Router::get('/', function () {
-//     (new MotobikeController())->filterByKanaPrefix();
-// });
+Router::get('/', function () {
+    (new MotobikeController())->filterByKanaPrefix();
+});
 
-// Database::closeConnection();
+Database::closeConnection();
 
-$faker = Factory::create();
+// $faker = Factory::create();
 
-$faker->seed(1234);
+// $faker->seed(1234);
 
-echo $faker->name() . "<br />";
-echo $faker->name('male') . "<br />";
-echo $faker->name('female') . "<br />";
+// echo $faker->name() . "<br />";
+// echo $faker->name('male') . "<br />";
+// echo $faker->name('female') . "<br />";
 
 //require __DIR__.'/src/Test/UserFake.php';

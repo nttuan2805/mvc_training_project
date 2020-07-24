@@ -5,7 +5,7 @@ return [
     'HOST' => 'mysqldb',
     'PORT' => '3306',
     'NAME' => 'webike',
-    'USER' => 'root',
-    'PASS' => 'root'
+    'USER' => 'devuser',
+    'PASS' => 'devpass'
  ]
 ];

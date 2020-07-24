@@ -23,15 +23,12 @@ services:
     depends_on:
       - php
   db:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    build:
+      context: ./mysql
     restart: always
     container_name: mysqldb
     environment:
       MYSQL_ROOT_PASSWORD: 'root'
-#      MYSQL_DATABASE: 'webike, webike_testing'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'pass'
     entrypoint:
       sh -c "
         echo 'CREATE DATABASE IF NOT EXISTS webike; CREATE DATABASE IF NOT EXISTS webike_testing;' > /docker-entrypoint-initdb.d/init.sql;
