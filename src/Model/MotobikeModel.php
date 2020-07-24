@@ -1,6 +1,7 @@
 <?php
 namespace App\Model;
 
+use App\Config\Connection;
 use App\Config\Database;
 
 class MotobikeModel
@@ -31,10 +32,19 @@ class MotobikeModel
         HAVING NULLIF(model_kana_prefix, '') IS NOT NULL 
         ORDER BY model_kana_prefix";
 
-        $db = Database::getInstance();
-        $result = mysqli_query($db, $sql);
+        $conn = Connection::getConnection();
+        $queryBuilder = $conn->createQueryBuilder();
+        $queryBuilder->select('model_kana_prefix')
+                    ->from('mst_model_v2')
+                    ->groupby('model_kana_prefix')
+                    ->orderby('model_kana_prefix');
 
-        var_dump($result);
+        $stm = $queryBuilder->execute();
+        $data = $stm->fetchAll();
+
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
     }
 
     /*

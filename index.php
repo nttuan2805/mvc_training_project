@@ -1,9 +1,11 @@
 <?php
 require __DIR__.'/vendor/autoload.php';
 
+use App\Config\Connection;
 use App\Config\Database;
 use App\Lib\Router;
 use App\Controller\MotobikeController;
+use App\Model\MotobikeModel;
 use Faker\Factory;
 
 // Router::get('/', function () {
@@ -18,10 +20,11 @@ use Faker\Factory;
 // });
 
 Router::get('/', function () {
-    (new MotobikeController())->filterByKanaPrefix();
+    //(new MotobikeController())->filterByKanaPrefix();
+    (new MotobikeModel())->kanaPrefix();
 });
 
-Database::closeConnection();
+Connection::closeConnection();
 
 // $faker = Factory::create();
 
