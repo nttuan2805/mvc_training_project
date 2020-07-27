@@ -19,18 +19,18 @@ use Faker\Factory;
 //     ]);
 // });
 
+// Router::get('/mvc_training_project/', function () {
+//     //(new MotobikeController())->filterByKanaPrefix();
+//     (new MotobikeModel())->kanaPrefixHasModel();
+// });
+
 Router::get('/mvc_training_project/', function () {
     //(new MotobikeController())->filterByKanaPrefix();
-    (new MotobikeModel())->kanaPrefixHasModel();
+    $motobikeList = (new MotobikeModel())->filterMotobikeListByKanaPrefix('ア');
+    echo '<pre>';
+    print_r($motobikeList);
+    echo '</pre>';
 });
-
-// Router::get('/', function () {
-//     //(new MotobikeController())->filterByKanaPrefix();
-//     $motobikeList = (new MotobikeModel())->filterMotobikeListByKanaPrefix('ア');
-//     echo '<pre>';
-//     print_r($motobikeList);
-//     echo '</pre>';
-// });
 
 Connection::closeConnection();
 
