@@ -2,10 +2,10 @@
 return [
  'Db' => [
     'DRIVER' => 'pdo_mysql',
-    'HOST' => 'mysqldb',
+    'HOST' => 'localhost',
     'PORT' => '3306',
     'NAME' => 'webike',
-    'USER' => 'devuser',
-    'PASS' => 'devpass'
+    'USER' => 'root',
+    'PASS' => ''
  ]
 ];

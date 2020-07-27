@@ -74,10 +74,10 @@ class MotobikeModel
             }
         }
 
-        // echo '<pre>';
-        // var_dump($kanaPrefixs);
-        // echo '</pre>';
-        return $kanaPrefixs;
+         echo '<pre>';
+         print_r($kanaPrefixs);
+         echo '</pre>';
+        //return $kanaPrefixs;
     }
 
     public function namePrefixHasModel()
