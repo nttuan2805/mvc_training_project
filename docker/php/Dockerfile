@@ -1,7 +1,8 @@
-FROM php:7.3-fpm
- 
-RUN docker-php-ext-install mysqli pdo pdo_mysql 
-RUN apt-get update && apt-get install vim -y
-RUN apt-get update && apt-get install netcat -y
+FROM php:7.4-fpm
+
+RUN apt-get update \
+ && apt-get install vim -y \
+ && docker-php-ext-install mysqli pdo pdo_mysql  \
+ && apt-get install netcat -y
  
 CMD ["php-fpm"]

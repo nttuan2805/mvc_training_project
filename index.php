@@ -21,7 +21,15 @@ use Faker\Factory;
 
 Router::get('/', function () {
     //(new MotobikeController())->filterByKanaPrefix();
-    (new MotobikeModel())->kanaPrefix();
+    (new MotobikeModel())->marketHasModel();
+});
+
+Router::get('/', function () {
+    //(new MotobikeController())->filterByKanaPrefix();
+    $motobikeList = (new MotobikeModel())->filterMotobikeListByKanaPrefix('ア');
+    echo '<pre>';
+    print_r($motobikeList);
+    echo '</pre>';
 });
 
 Connection::closeConnection();
