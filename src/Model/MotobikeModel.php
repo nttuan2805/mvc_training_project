@@ -237,17 +237,16 @@ class MotobikeModel
         print_r($this->alphabel_jp[$kanaPrefix]);
         echo '</pre>';
 
-        $aaa = array('ア', 'イ', 'ウ', 'エ', 'オ');
+        $kanaPrefixs = "'" . implode("', '", $this->alphabel_jp[$kanaPrefix]) . "'";
 
         $conn = Connection::getConnection();
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select(' model_name')
                         ->from('mst_model_v2')
                         //->where('model_kana_prefix IN (:kanas)')
-                        ->where($queryBuilder->expr()->in('model_kana_prefix', array(':abc')))
-                        //->andWhere('model_count > 0')
-                        ->setParameter(':abc', array('ア', 'イ', 'ウ', 'エ', 'オ'), Types::ARRAY);
-                        //->orderby('model_kana_prefix');
+                        ->where($queryBuilder->expr()->in('model_kana_prefix', $kanaPrefixs))
+                        ->andWhere('model_count > 0')
+                        ->orderby('model_kana_prefix');
 
         $stm = $queryBuilder->execute();
         $motobikeList = $stm->fetchAll(PDO::FETCH_COLUMN);
