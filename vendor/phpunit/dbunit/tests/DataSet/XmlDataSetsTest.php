@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of DBUnit.
+ * This file is part of DbUnit.
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
@@ -8,24 +8,32 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @since      File available since Release 1.0.0
- */
-class Extensions_Database_DataSet_XmlDataSetsTest extends PHPUnit_Framework_TestCase
+use PHPUnit\DbUnit\Constraint\DataSetIsEqual;
+use PHPUnit\DbUnit\DataSet\DefaultDataSet;
+use PHPUnit\DbUnit\DataSet\DefaultTable;
+use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
+use PHPUnit\DbUnit\DataSet\FlatXmlDataSet;
+use PHPUnit\DbUnit\DataSet\MysqlXmlDataSet;
+use PHPUnit\DbUnit\DataSet\XmlDataSet;
+use PHPUnit\Framework\TestCase;
+
+class Extensions_Database_DataSet_XmlDataSetsTest extends TestCase
 {
     protected $expectedDataSet;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $table1MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table1', ['table1_id', 'column1', 'column2', 'column3', 'column4']
+        $table1MetaData = new DefaultTableMetadata(
+            'table1',
+            ['table1_id', 'column1', 'column2', 'column3', 'column4']
         );
-        $table2MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table2', ['table2_id', 'column5', 'column6', 'column7', 'column8']
+        $table2MetaData = new DefaultTableMetadata(
+            'table2',
+            ['table2_id', 'column5', 'column6', 'column7', 'column8']
         );
 
-        $table1 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
-        $table2 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
+        $table1 = new DefaultTable($table1MetaData);
+        $table2 = new DefaultTable($table2MetaData);
 
         $table1->addRow([
             'table1_id' => 1,
@@ -60,40 +68,40 @@ class Extensions_Database_DataSet_XmlDataSetsTest extends PHPUnit_Framework_Test
             'table2_id' => 2,
             'column5'   => 'asdhfoih',
             'column6'   => 654,
-            'column7'   => NULL,
+            'column7'   => null,
             'column8'   => '43asdfhgj'
         ]);
         $table2->addRow([
             'table2_id' => 3,
             'column5'   => 'ajsdlkfguitah',
             'column6'   => 654,
-            'column7'   => NULL,
-            'column8'   => NULL
+            'column7'   => null,
+            'column8'   => null
         ]);
 
-        $this->expectedDataSet = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$table1, $table2]);
+        $this->expectedDataSet = new DefaultDataSet([$table1, $table2]);
     }
 
-    public function testFlatXmlDataSet()
+    public function testFlatXmlDataSet(): void
     {
-        $constraint     = new PHPUnit_Extensions_Database_Constraint_DataSetIsEqual($this->expectedDataSet);
-        $xmlFlatDataSet = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/FlatXmlDataSet.xml');
+        $constraint     = new DataSetIsEqual($this->expectedDataSet);
+        $xmlFlatDataSet = new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/FlatXmlDataSet.xml');
 
         self::assertThat($xmlFlatDataSet, $constraint);
     }
 
-    public function testXmlDataSet()
+    public function testXmlDataSet(): void
     {
-        $constraint = new PHPUnit_Extensions_Database_Constraint_DataSetIsEqual($this->expectedDataSet);
-        $xmlDataSet = new PHPUnit_Extensions_Database_DataSet_XmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/XmlDataSet.xml');
+        $constraint = new DataSetIsEqual($this->expectedDataSet);
+        $xmlDataSet = new XmlDataSet(__DIR__ . '/../_files/XmlDataSets/XmlDataSet.xml');
 
         self::assertThat($xmlDataSet, $constraint);
     }
 
-    public function testMysqlXmlDataSet()
+    public function testMysqlXmlDataSet(): void
     {
-        $constraint      = new PHPUnit_Extensions_Database_Constraint_DataSetIsEqual($this->expectedDataSet);
-        $mysqlXmlDataSet = new PHPUnit_Extensions_Database_DataSet_MysqlXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/MysqlXmlDataSet.xml');
+        $constraint      = new DataSetIsEqual($this->expectedDataSet);
+        $mysqlXmlDataSet = new MysqlXmlDataSet(__DIR__ . '/../_files/XmlDataSets/MysqlXmlDataSet.xml');
 
         self::assertThat($mysqlXmlDataSet, $constraint);
     }

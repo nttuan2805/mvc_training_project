@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of DBUnit.
+ * This file is part of DbUnit.
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
@@ -8,28 +8,30 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @since      File available since Release 1.0.0
- */
-class Extensions_Database_DataSet_FilterTest extends PHPUnit_Framework_TestCase
+use PHPUnit\DbUnit\Constraint\DataSetIsEqual;
+use PHPUnit\DbUnit\DataSet\Filter;
+use PHPUnit\DbUnit\DataSet\FlatXmlDataSet;
+use PHPUnit\Framework\TestCase;
+
+class Extensions_Database_DataSet_FilterTest extends TestCase
 {
     protected $expectedDataSet;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->expectedDataSet = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(
-            dirname(__FILE__) . '/../_files/XmlDataSets/FilteredTestFixture.xml'
+        $this->expectedDataSet = new FlatXmlDataSet(
+            __DIR__ . '/../_files/XmlDataSets/FilteredTestFixture.xml'
         );
     }
 
-    public function testDeprecatedFilteredDataSetConstructor()
+    public function testDeprecatedFilteredDataSetConstructor(): void
     {
-        $constraint = new PHPUnit_Extensions_Database_Constraint_DataSetIsEqual($this->expectedDataSet);
-        $dataSet    = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(
-            dirname(__FILE__) . '/../_files/XmlDataSets/FilteredTestComparison.xml'
+        $constraint = new DataSetIsEqual($this->expectedDataSet);
+        $dataSet    = new FlatXmlDataSet(
+            __DIR__ . '/../_files/XmlDataSets/FilteredTestComparison.xml'
         );
 
-        $filteredDataSet = new PHPUnit_Extensions_Database_DataSet_DataSetFilter($dataSet, [
+        $filteredDataSet = new Filter($dataSet, [
             'table1' => ['table1_id'],
             'table2' => '*',
             'table3' => 'table3_id'
@@ -38,14 +40,14 @@ class Extensions_Database_DataSet_FilterTest extends PHPUnit_Framework_TestCase
         self::assertThat($filteredDataSet, $constraint);
     }
 
-    public function testExcludeFilteredDataSet()
+    public function testExcludeFilteredDataSet(): void
     {
-        $constraint = new PHPUnit_Extensions_Database_Constraint_DataSetIsEqual($this->expectedDataSet);
-        $dataSet    = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(
-            dirname(__FILE__) . '/../_files/XmlDataSets/FilteredTestComparison.xml'
+        $constraint = new DataSetIsEqual($this->expectedDataSet);
+        $dataSet    = new FlatXmlDataSet(
+            __DIR__ . '/../_files/XmlDataSets/FilteredTestComparison.xml'
         );
 
-        $filteredDataSet = new PHPUnit_Extensions_Database_DataSet_DataSetFilter($dataSet);
+        $filteredDataSet = new Filter($dataSet);
 
         $filteredDataSet->addExcludeTables(['table2']);
         $filteredDataSet->setExcludeColumnsForTable('table1', ['table1_id']);
@@ -54,14 +56,14 @@ class Extensions_Database_DataSet_FilterTest extends PHPUnit_Framework_TestCase
         self::assertThat($filteredDataSet, $constraint);
     }
 
-    public function testIncludeFilteredDataSet()
+    public function testIncludeFilteredDataSet(): void
     {
-        $constraint = new PHPUnit_Extensions_Database_Constraint_DataSetIsEqual($this->expectedDataSet);
-        $dataSet    = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(
-            dirname(__FILE__) . '/../_files/XmlDataSets/FilteredTestComparison.xml'
+        $constraint = new DataSetIsEqual($this->expectedDataSet);
+        $dataSet    = new FlatXmlDataSet(
+            __DIR__ . '/../_files/XmlDataSets/FilteredTestComparison.xml'
         );
 
-        $filteredDataSet = new PHPUnit_Extensions_Database_DataSet_DataSetFilter($dataSet);
+        $filteredDataSet = new Filter($dataSet);
 
         $filteredDataSet->addIncludeTables(['table1', 'table3']);
         $filteredDataSet->setIncludeColumnsForTable('table1', ['column1', 'column2', 'column3', 'column4']);
@@ -70,14 +72,14 @@ class Extensions_Database_DataSet_FilterTest extends PHPUnit_Framework_TestCase
         self::assertThat($filteredDataSet, $constraint);
     }
 
-    public function testIncludeExcludeMixedDataSet()
+    public function testIncludeExcludeMixedDataSet(): void
     {
-        $constraint = new PHPUnit_Extensions_Database_Constraint_DataSetIsEqual($this->expectedDataSet);
-        $dataSet    = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(
-            dirname(__FILE__) . '/../_files/XmlDataSets/FilteredTestComparison.xml'
+        $constraint = new DataSetIsEqual($this->expectedDataSet);
+        $dataSet    = new FlatXmlDataSet(
+            __DIR__ . '/../_files/XmlDataSets/FilteredTestComparison.xml'
         );
 
-        $filteredDataSet = new PHPUnit_Extensions_Database_DataSet_DataSetFilter($dataSet);
+        $filteredDataSet = new Filter($dataSet);
 
         $filteredDataSet->addIncludeTables(['table1', 'table3']);
         $filteredDataSet->setExcludeColumnsForTable('table1', ['table1_id']);

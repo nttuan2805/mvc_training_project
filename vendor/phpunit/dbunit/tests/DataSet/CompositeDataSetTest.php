@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of DBUnit.
+ * This file is part of DbUnit.
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
@@ -8,31 +8,37 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @since      File available since Release 1.0.0
- */
-class Extensions_Database_DataSet_CompositeDataSetTest extends PHPUnit_Framework_TestCase
+use PHPUnit\DbUnit\DataSet\CompositeDataSet;
+use PHPUnit\DbUnit\DataSet\DefaultDataSet;
+use PHPUnit\DbUnit\DataSet\DefaultTable;
+use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
+use PHPUnit\DbUnit\TestCase;
+
+class Extensions_Database_DataSet_CompositeDataSetTest extends \PHPUnit\Framework\TestCase
 {
     protected $expectedDataSet1;
     protected $expectedDataSet2;
     protected $expectedDataSet3;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $table1MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table1', ['table1_id', 'column1', 'column2', 'column3', 'column4']
+        $table1MetaData = new DefaultTableMetadata(
+            'table1',
+            ['table1_id', 'column1', 'column2', 'column3', 'column4']
         );
-        $table2MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table2', ['table2_id', 'column5', 'column6', 'column7', 'column8']
-        );
-
-        $table3MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table3', ['table3_id', 'column9', 'column10', 'column11', 'column12']
+        $table2MetaData = new DefaultTableMetadata(
+            'table2',
+            ['table2_id', 'column5', 'column6', 'column7', 'column8']
         );
 
-        $table1 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
-        $table2 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
-        $table3 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table3MetaData);
+        $table3MetaData = new DefaultTableMetadata(
+            'table3',
+            ['table3_id', 'column9', 'column10', 'column11', 'column12']
+        );
+
+        $table1 = new DefaultTable($table1MetaData);
+        $table2 = new DefaultTable($table2MetaData);
+        $table3 = new DefaultTable($table3MetaData);
 
         $table1->addRow([
             'table1_id' => 1,
@@ -101,21 +107,21 @@ asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
             'column12'  => '0y8hosnd a/df7y olgbjs da'
         ]);
 
-        $this->expectedDataSet1 = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$table1, $table2]);
-        $this->expectedDataSet2 = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$table3]);
-        $this->expectedDataSet3 = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$table1, $table2, $table3]);
+        $this->expectedDataSet1 = new DefaultDataSet([$table1, $table2]);
+        $this->expectedDataSet2 = new DefaultDataSet([$table3]);
+        $this->expectedDataSet3 = new DefaultDataSet([$table1, $table2, $table3]);
     }
 
-    public function testCompositeDataSet()
+    public function testCompositeDataSet(): void
     {
-        $actual = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet([$this->expectedDataSet1, $this->expectedDataSet2]);
+        $actual = new CompositeDataSet([$this->expectedDataSet1, $this->expectedDataSet2]);
 
-        PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($this->expectedDataSet3, $actual);
+        TestCase::assertDataSetsEqual($this->expectedDataSet3, $actual);
     }
 
-    public function testCompatibleTablesInDifferentDataSetsNonDuplicateRows()
+    public function testCompatibleTablesInDifferentDataSetsNonDuplicateRows(): void
     {
-        $compatibleTable = new PHPUnit_Extensions_Database_DataSet_DefaultTable(
+        $compatibleTable = new DefaultTable(
             $this->expectedDataSet3->getTable('table3')->getTableMetaData()
         );
 
@@ -127,8 +133,8 @@ asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
             'column12'  => 'askldja'
         ]);
 
-        $compositeDataSet = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet([
-            new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$compatibleTable]),
+        $compositeDataSet = new CompositeDataSet([
+            new DefaultDataSet([$compatibleTable]),
             $this->expectedDataSet2
         ]);
 
@@ -139,13 +145,14 @@ asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
      * @expectedException           InvalidArgumentException
      * @expectedExceptionMessage    There is already a table named table3 with different table definition
      */
-    public function testExceptionOnIncompatibleTablesSameTableNames()
+    public function testExceptionOnIncompatibleTablesSameTableNames(): void
     {
-        $inCompatibleTableMetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table3', ['table3_id', 'column13', 'column14', 'column15', 'column16']
+        $inCompatibleTableMetaData = new DefaultTableMetadata(
+            'table3',
+            ['table3_id', 'column13', 'column14', 'column15', 'column16']
         );
 
-        $inCompatibleTable = new PHPUnit_Extensions_Database_DataSet_DefaultTable($inCompatibleTableMetaData);
+        $inCompatibleTable = new DefaultTable($inCompatibleTableMetaData);
         $inCompatibleTable->addRow([
             'column13' => 'asdasda asdasd',
             'column14' => 'aiafsjas asd',
@@ -153,9 +160,9 @@ asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
             'column16' => 2141
         ]);
 
-        $compositeDataSet = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet([
+        $compositeDataSet = new CompositeDataSet([
             $this->expectedDataSet2,
-            new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$inCompatibleTable])
+            new DefaultDataSet([$inCompatibleTable])
         ]);
     }
 
@@ -163,13 +170,14 @@ asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
      * @expectedException           InvalidArgumentException
      * @expectedExceptionMessage    There is already a table named table3 with different table definition
      */
-    public function testExceptionOnIncompatibleTablesSameTableNames2()
+    public function testExceptionOnIncompatibleTablesSameTableNames2(): void
     {
-        $inCompatibleTableMetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table3', ['table3_id', 'column13', 'column14', 'column15', 'column16']
+        $inCompatibleTableMetaData = new DefaultTableMetadata(
+            'table3',
+            ['table3_id', 'column13', 'column14', 'column15', 'column16']
         );
 
-        $inCompatibleTable = new PHPUnit_Extensions_Database_DataSet_DefaultTable($inCompatibleTableMetaData);
+        $inCompatibleTable = new DefaultTable($inCompatibleTableMetaData);
         $inCompatibleTable->addRow([
             'column13' => 'asdasda asdasd',
             'column14' => 'aiafsjas asd',
@@ -177,8 +185,8 @@ asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
             'column16' => 2141
         ]);
 
-        $compositeDataSet = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet([
-            new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$inCompatibleTable]),
+        $compositeDataSet = new CompositeDataSet([
+            new DefaultDataSet([$inCompatibleTable]),
             $this->expectedDataSet2
         ]);
     }

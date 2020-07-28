@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of DBUnit.
+ * This file is part of DbUnit.
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
@@ -8,16 +8,26 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'DatabaseTestUtility.php';
+use PHPUnit\DbUnit\Database\DefaultConnection;
+use PHPUnit\DbUnit\DataSet\DefaultDataSet;
+use PHPUnit\DbUnit\DataSet\DefaultTable;
+use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
+use PHPUnit\DbUnit\DataSet\FlatXmlDataSet;
+use PHPUnit\DbUnit\Operation\Delete;
+use PHPUnit\DbUnit\Operation\DeleteAll;
+use PHPUnit\DbUnit\Operation\Insert;
+use PHPUnit\DbUnit\Operation\Replace;
+use PHPUnit\DbUnit\Operation\Truncate;
+use PHPUnit\DbUnit\Operation\Update;
+use PHPUnit\DbUnit\TestCase;
 
-/**
- * @since      File available since Release 1.0.0
- */
-class Extensions_Database_Operation_OperationsTest extends PHPUnit_Extensions_Database_TestCase
+require_once \dirname(__DIR__) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'DatabaseTestUtility.php';
+
+class Extensions_Database_Operation_OperationsTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
-        if (!extension_loaded('pdo_sqlite')) {
+        if (!\extension_loaded('pdo_sqlite')) {
             $this->markTestSkipped('PDO/SQLite is required to run this test.');
         }
 
@@ -26,112 +36,125 @@ class Extensions_Database_Operation_OperationsTest extends PHPUnit_Extensions_Da
 
     public function getConnection()
     {
-        return new PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection(DBUnitTestUtility::getSQLiteMemoryDB(), 'sqlite');
+        return new DefaultConnection(DBUnitTestUtility::getSQLiteMemoryDB(), 'sqlite');
     }
 
     public function getDataSet()
     {
-        return new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/OperationsTestFixture.xml');
+        return new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/OperationsTestFixture.xml');
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
-        $deleteOperation = new PHPUnit_Extensions_Database_Operation_Delete();
+        $deleteOperation = new Delete();
 
-        $deleteOperation->execute($this->getConnection(), new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/DeleteOperationTest.xml'));
+        $deleteOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/DeleteOperationTest.xml'));
 
-        $this->assertDataSetsEqual(new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/DeleteOperationResult.xml'), $this->getConnection()->createDataSet());
+        $this->assertDataSetsEqual(new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/DeleteOperationResult.xml'), $this->getConnection()->createDataSet());
     }
 
-    public function testDeleteAll()
+    public function testDeleteAll(): void
     {
-        $deleteAllOperation = new PHPUnit_Extensions_Database_Operation_DeleteAll();
+        $deleteAllOperation = new DeleteAll();
 
-        $deleteAllOperation->execute($this->getConnection(), new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/DeleteAllOperationTest.xml'));
+        $deleteAllOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/DeleteAllOperationTest.xml'));
 
-        $expectedDataSet = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([
-            new PHPUnit_Extensions_Database_DataSet_DefaultTable(
-                new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData('table1',
-                    ['table1_id', 'column1', 'column2', 'column3', 'column4'])
+        $expectedDataSet = new DefaultDataSet([
+            new DefaultTable(
+                new DefaultTableMetadata(
+                    'table1',
+                    ['table1_id', 'column1', 'column2', 'column3', 'column4']
+                )
             ),
-            new PHPUnit_Extensions_Database_DataSet_DefaultTable(
-                new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData('table2',
-                    ['table2_id', 'column5', 'column6', 'column7', 'column8'])
+            new DefaultTable(
+                new DefaultTableMetadata(
+                    'table2',
+                    ['table2_id', 'column5', 'column6', 'column7', 'column8']
+                )
             ),
-            new PHPUnit_Extensions_Database_DataSet_DefaultTable(
-                new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData('table3',
-                    ['table3_id', 'column9', 'column10', 'column11', 'column12'])
-            ),
-        ]);
-
-        $this->assertDataSetsEqual($expectedDataSet, $this->getConnection()->createDataSet());
-    }
-
-    public function testTruncate()
-    {
-        $truncateOperation = new PHPUnit_Extensions_Database_Operation_Truncate();
-
-        $truncateOperation->execute($this->getConnection(), new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/DeleteAllOperationTest.xml'));
-
-        $expectedDataSet = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([
-            new PHPUnit_Extensions_Database_DataSet_DefaultTable(
-                new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData('table1',
-                    ['table1_id', 'column1', 'column2', 'column3', 'column4'])
-            ),
-            new PHPUnit_Extensions_Database_DataSet_DefaultTable(
-                new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData('table2',
-                    ['table2_id', 'column5', 'column6', 'column7', 'column8'])
-            ),
-            new PHPUnit_Extensions_Database_DataSet_DefaultTable(
-                new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData('table3',
-                    ['table3_id', 'column9', 'column10', 'column11', 'column12'])
+            new DefaultTable(
+                new DefaultTableMetadata(
+                    'table3',
+                    ['table3_id', 'column9', 'column10', 'column11', 'column12']
+                )
             ),
         ]);
 
         $this->assertDataSetsEqual($expectedDataSet, $this->getConnection()->createDataSet());
     }
 
-    public function testInsert()
+    public function testTruncate(): void
     {
-        $insertOperation = new PHPUnit_Extensions_Database_Operation_Insert();
+        $truncateOperation = new Truncate();
 
-        $insertOperation->execute($this->getConnection(), new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/InsertOperationTest.xml'));
+        $truncateOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/DeleteAllOperationTest.xml'));
 
-        $this->assertDataSetsEqual(new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/InsertOperationResult.xml'), $this->getConnection()->createDataSet());
+        $expectedDataSet = new DefaultDataSet([
+            new DefaultTable(
+                new DefaultTableMetadata(
+                    'table1',
+                    ['table1_id', 'column1', 'column2', 'column3', 'column4']
+                )
+            ),
+            new DefaultTable(
+                new DefaultTableMetadata(
+                    'table2',
+                    ['table2_id', 'column5', 'column6', 'column7', 'column8']
+                )
+            ),
+            new DefaultTable(
+                new DefaultTableMetadata(
+                    'table3',
+                    ['table3_id', 'column9', 'column10', 'column11', 'column12']
+                )
+            ),
+        ]);
+
+        $this->assertDataSetsEqual($expectedDataSet, $this->getConnection()->createDataSet());
     }
 
-    public function testUpdate()
+    public function testInsert(): void
     {
-        $updateOperation = new PHPUnit_Extensions_Database_Operation_Update();
+        $insertOperation = new Insert();
 
-        $updateOperation->execute($this->getConnection(), new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/UpdateOperationTest.xml'));
+        $insertOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/InsertOperationTest.xml'));
 
-        $this->assertDataSetsEqual(new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/UpdateOperationResult.xml'), $this->getConnection()->createDataSet());
+        $this->assertDataSetsEqual(new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/InsertOperationResult.xml'), $this->getConnection()->createDataSet());
     }
 
-    public function testReplace()
+    public function testUpdate(): void
     {
-        $replaceOperation = new PHPUnit_Extensions_Database_Operation_Replace();
+        $updateOperation = new Update();
 
-        $replaceOperation->execute($this->getConnection(), new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/ReplaceOperationTest.xml'));
+        $updateOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/UpdateOperationTest.xml'));
 
-        $this->assertDataSetsEqual(new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/ReplaceOperationResult.xml'), $this->getConnection()->createDataSet());
+        $this->assertDataSetsEqual(new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/UpdateOperationResult.xml'), $this->getConnection()->createDataSet());
     }
 
-    public function testInsertEmptyTable()
+    public function testReplace(): void
     {
-        $insertOperation = new PHPUnit_Extensions_Database_Operation_Insert();
+        $replaceOperation = new Replace();
 
-        $insertOperation->execute($this->getConnection(), new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/EmptyTableInsertTest.xml'));
+        $replaceOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/ReplaceOperationTest.xml'));
 
-        $this->assertDataSetsEqual(new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/EmptyTableInsertResult.xml'), $this->getConnection()->createDataSet());
+        $this->assertDataSetsEqual(new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/ReplaceOperationResult.xml'), $this->getConnection()->createDataSet());
     }
-    public function testInsertAllEmptyTables()
+
+    public function testInsertEmptyTable(): void
     {
-        $insertOperation = new PHPUnit_Extensions_Database_Operation_Insert();
+        $insertOperation = new Insert();
 
-        $insertOperation->execute($this->getConnection(), new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/AllEmptyTableInsertTest.xml'));
+        $insertOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/EmptyTableInsertTest.xml'));
 
-        $this->assertDataSetsEqual(new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__) . '/../_files/XmlDataSets/AllEmptyTableInsertResult.xml'), $this->getConnection()->createDataSet());
+        $this->assertDataSetsEqual(new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/EmptyTableInsertResult.xml'), $this->getConnection()->createDataSet());
+    }
+
+    public function testInsertAllEmptyTables(): void
+    {
+        $insertOperation = new Insert();
+
+        $insertOperation->execute($this->getConnection(), new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/AllEmptyTableInsertTest.xml'));
+
+        $this->assertDataSetsEqual(new FlatXmlDataSet(__DIR__ . '/../_files/XmlDataSets/AllEmptyTableInsertResult.xml'), $this->getConnection()->createDataSet());
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of DBUnit.
+ * This file is part of DbUnit.
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
@@ -8,9 +8,6 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @since      Class available since Release 1.0.0
- */
 class DBUnitTestUtility
 {
     protected static $connection;
@@ -18,7 +15,7 @@ class DBUnitTestUtility
 
     public static function getSQLiteMemoryDB()
     {
-        if (self::$connection === NULL) {
+        if (self::$connection === null) {
             self::$connection = new PDO('sqlite::memory:');
             self::setUpDatabase(self::$connection);
         }
@@ -33,12 +30,12 @@ class DBUnitTestUtility
      * and empty password and listening on unix socket
      *
      * @return PDO
+     *
      * @see    DBUnitTestUtility::setUpMySqlDatabase()
      */
     public static function getMySQLDB()
     {
-        if (self::$mySQLConnection === NULL) {
-
+        if (self::$mySQLConnection === null) {
             self::$mySQLConnection = new PDO(PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_DSN, PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_USERNAME, PHPUNIT_TESTSUITE_EXTENSION_DATABASE_MYSQL_PASSWORD);
 
             self::setUpMySQLDatabase(self::$mySQLConnection);
@@ -47,7 +44,7 @@ class DBUnitTestUtility
         return self::$mySQLConnection;
     }
 
-    protected static function setUpDatabase(PDO $connection)
+    protected static function setUpDatabase(PDO $connection): void
     {
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -89,9 +86,10 @@ class DBUnitTestUtility
      * for constraint tests to be executed properly
      *
      * @param PDO $connection PDO instance representing connection to MySQL database
+     *
      * @see   DBUnitTestUtility::getMySQLDB()
      */
-    protected static function setUpMySqlDatabase(PDO $connection)
+    protected static function setUpMySqlDatabase(PDO $connection): void
     {
         $connection->exec(
           'CREATE TABLE IF NOT EXISTS table1 (
@@ -102,7 +100,8 @@ class DBUnitTestUtility
             column4 TEXT,
             PRIMARY KEY (table1_id)
           ) ENGINE=INNODB;
-        ');
+        '
+        );
 
         $connection->exec(
           'CREATE TABLE IF NOT EXISTS table2 (
@@ -115,7 +114,8 @@ class DBUnitTestUtility
             PRIMARY KEY (table2_id),
             FOREIGN KEY (table1_id) REFERENCES table1(table1_id)
           ) ENGINE=INNODB;
-        ');
+        '
+        );
 
         $connection->exec(
           'CREATE TABLE IF NOT EXISTS table3 (
@@ -128,6 +128,7 @@ class DBUnitTestUtility
             PRIMARY KEY (table3_id),
             FOREIGN KEY (table2_id) REFERENCES table2(table2_id)
           ) ENGINE=INNODB;
-        ');
+        '
+        );
     }
 }

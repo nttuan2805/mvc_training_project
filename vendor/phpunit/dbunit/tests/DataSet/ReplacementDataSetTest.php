@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of DBUnit.
+ * This file is part of DbUnit.
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
@@ -8,27 +8,32 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @since      File available since Release 1.0.0
- */
-class Extensions_Database_DataSet_ReplacementDataSetTest extends PHPUnit_Framework_TestCase
+use PHPUnit\DbUnit\DataSet\DefaultDataSet;
+use PHPUnit\DbUnit\DataSet\DefaultTable;
+use PHPUnit\DbUnit\DataSet\DefaultTableMetadata;
+use PHPUnit\DbUnit\DataSet\ReplacementDataSet;
+use PHPUnit\DbUnit\TestCase;
+
+class Extensions_Database_DataSet_ReplacementDataSetTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var PHPUnit_Extensions_Database_DataSet_DefaultDataSet
+     * @var DefaultDataSet
      */
     protected $startingDataSet;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $table1MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table1', ['table1_id', 'column1', 'column2', 'column3', 'column4']
+        $table1MetaData = new DefaultTableMetadata(
+            'table1',
+            ['table1_id', 'column1', 'column2', 'column3', 'column4']
         );
-        $table2MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table2', ['table2_id', 'column5', 'column6', 'column7', 'column8']
+        $table2MetaData = new DefaultTableMetadata(
+            'table2',
+            ['table2_id', 'column5', 'column6', 'column7', 'column8']
         );
 
-        $table1 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
-        $table2 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
+        $table1 = new DefaultTable($table1MetaData);
+        $table2 = new DefaultTable($table2MetaData);
 
         $table1->addRow([
             'table1_id' => 1,
@@ -74,28 +79,30 @@ class Extensions_Database_DataSet_ReplacementDataSetTest extends PHPUnit_Framewo
             'column8'   => '[NULL] not really'
         ]);
 
-        $this->startingDataSet = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$table1, $table2]);
+        $this->startingDataSet = new DefaultDataSet([$table1, $table2]);
     }
 
-    public function testNoReplacement()
+    public function testNoReplacement(): void
     {
-        PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual(
+        TestCase::assertDataSetsEqual(
             $this->startingDataSet,
-            new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet($this->startingDataSet)
+            new ReplacementDataSet($this->startingDataSet)
         );
     }
 
-    public function testFullReplacement()
+    public function testFullReplacement(): void
     {
-        $table1MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table1', ['table1_id', 'column1', 'column2', 'column3', 'column4']
+        $table1MetaData = new DefaultTableMetadata(
+            'table1',
+            ['table1_id', 'column1', 'column2', 'column3', 'column4']
         );
-        $table2MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table2', ['table2_id', 'column5', 'column6', 'column7', 'column8']
+        $table2MetaData = new DefaultTableMetadata(
+            'table2',
+            ['table2_id', 'column5', 'column6', 'column7', 'column8']
         );
 
-        $table1 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
-        $table2 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
+        $table1 = new DefaultTable($table1MetaData);
+        $table2 = new DefaultTable($table2MetaData);
 
         $table1->addRow([
             'table1_id' => 1,
@@ -116,7 +123,7 @@ class Extensions_Database_DataSet_ReplacementDataSetTest extends PHPUnit_Framewo
             'column1'   => 'ha;gyt',
             'column2'   => 462,
             'column3'   => 1654.4,
-            'column4'   => NULL
+            'column4'   => null
         ]);
 
         $table2->addRow([
@@ -130,35 +137,37 @@ class Extensions_Database_DataSet_ReplacementDataSetTest extends PHPUnit_Framewo
             'table2_id' => 2,
             'column5'   => 'asdhfoih',
             'column6'   => 654,
-            'column7'   => NULL,
+            'column7'   => null,
             'column8'   => '43asdfhgj'
         ]);
         $table2->addRow([
             'table2_id' => 3,
             'column5'   => 'ajsdlkfguitah',
             'column6'   => 654,
-            'column7'   => NULL,
+            'column7'   => null,
             'column8'   => '[NULL] not really'
         ]);
 
-        $expected = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$table1, $table2]);
-        $actual   = new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet($this->startingDataSet);
-        $actual->addFullReplacement('[NULL]', NULL);
+        $expected = new DefaultDataSet([$table1, $table2]);
+        $actual   = new ReplacementDataSet($this->startingDataSet);
+        $actual->addFullReplacement('[NULL]', null);
 
-        PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($expected, $actual);
+        TestCase::assertDataSetsEqual($expected, $actual);
     }
 
-    public function testSubStrReplacement()
+    public function testSubStrReplacement(): void
     {
-        $table1MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table1', ['table1_id', 'column1', 'column2', 'column3', 'column4']
+        $table1MetaData = new DefaultTableMetadata(
+            'table1',
+            ['table1_id', 'column1', 'column2', 'column3', 'column4']
         );
-        $table2MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table2', ['table2_id', 'column5', 'column6', 'column7', 'column8']
+        $table2MetaData = new DefaultTableMetadata(
+            'table2',
+            ['table2_id', 'column5', 'column6', 'column7', 'column8']
         );
 
-        $table1 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
-        $table2 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
+        $table1 = new DefaultTable($table1MetaData);
+        $table2 = new DefaultTable($table2MetaData);
 
         $table1->addRow([
             'table1_id' => 1,
@@ -204,24 +213,26 @@ class Extensions_Database_DataSet_ReplacementDataSetTest extends PHPUnit_Framewo
             'column8'   => '[NULL] not really'
         ]);
 
-        $expected = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$table1, $table2]);
-        $actual   = new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet($this->startingDataSet);
+        $expected = new DefaultDataSet([$table1, $table2]);
+        $actual   = new ReplacementDataSet($this->startingDataSet);
         $actual->addSubStrReplacement('%%%name%%%', 'Mike Lively');
 
-        PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($expected, $actual);
+        TestCase::assertDataSetsEqual($expected, $actual);
     }
 
-    public function testConstructorReplacements()
+    public function testConstructorReplacements(): void
     {
-        $table1MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table1', ['table1_id', 'column1', 'column2', 'column3', 'column4']
+        $table1MetaData = new DefaultTableMetadata(
+            'table1',
+            ['table1_id', 'column1', 'column2', 'column3', 'column4']
         );
-        $table2MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
-            'table2', ['table2_id', 'column5', 'column6', 'column7', 'column8']
+        $table2MetaData = new DefaultTableMetadata(
+            'table2',
+            ['table2_id', 'column5', 'column6', 'column7', 'column8']
         );
 
-        $table1 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
-        $table2 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
+        $table1 = new DefaultTable($table1MetaData);
+        $table2 = new DefaultTable($table2MetaData);
 
         $table1->addRow([
             'table1_id' => 1,
@@ -242,7 +253,7 @@ class Extensions_Database_DataSet_ReplacementDataSetTest extends PHPUnit_Framewo
             'column1'   => 'ha;gyt',
             'column2'   => 462,
             'column3'   => 1654.4,
-            'column4'   => NULL
+            'column4'   => null
         ]);
 
         $table2->addRow([
@@ -256,24 +267,24 @@ class Extensions_Database_DataSet_ReplacementDataSetTest extends PHPUnit_Framewo
             'table2_id' => 2,
             'column5'   => 'asdhfoih',
             'column6'   => 654,
-            'column7'   => NULL,
+            'column7'   => null,
             'column8'   => '43asdfhgj'
         ]);
         $table2->addRow([
             'table2_id' => 3,
             'column5'   => 'ajsdlkfguitah',
             'column6'   => 654,
-            'column7'   => NULL,
+            'column7'   => null,
             'column8'   => '[NULL] not really'
         ]);
 
-        $expected = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet([$table1, $table2]);
-        $actual   = new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
+        $expected = new DefaultDataSet([$table1, $table2]);
+        $actual   = new ReplacementDataSet(
             $this->startingDataSet,
-            ['[NULL]'     => NULL],
+            ['[NULL]'     => null],
             ['%%%name%%%' => 'Mike Lively']
         );
 
-        PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($expected, $actual);
+        TestCase::assertDataSetsEqual($expected, $actual);
     }
 }

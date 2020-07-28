@@ -7,6 +7,7 @@ use App\Lib\Router;
 use App\Controller\MotobikeController;
 use App\Model\MotobikeModel;
 use Faker\Factory;
+use Test\URLTest;
 
 // Router::get('/', function () {
 //     echo 'Hello World';
@@ -30,6 +31,10 @@ Router::get('/', function () {
     echo '<pre>';
     print_r($motobikeList);
     echo '</pre>';
+
+    echo __DIR__.'/vendor/autoload.php';
+    $test = new URLTest();
+    echo $test->test();
 });
 
 Connection::closeConnection();
