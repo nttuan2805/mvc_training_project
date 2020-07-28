@@ -19,10 +19,10 @@ use Faker\Factory;
 //     ]);
 // });
 
-Router::get('/', function () {
-    //(new MotobikeController())->filterByKanaPrefix();
-    (new MotobikeModel())->marketHasModel();
-});
+// Router::get('/', function () {
+//     //(new MotobikeController())->filterByKanaPrefix();
+//     (new MotobikeModel())->marketHasModel();
+// });
 
 Router::get('/', function () {
     //(new MotobikeController())->filterByKanaPrefix();

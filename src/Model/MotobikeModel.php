@@ -243,7 +243,6 @@ class MotobikeModel
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select(' model_name')
                         ->from('mst_model_v2')
-                        //->where('model_kana_prefix IN (:kanas)')
                         ->where($queryBuilder->expr()->in('model_kana_prefix', $kanaPrefixs))
                         ->andWhere('model_count > 0')
                         ->orderby('model_kana_prefix');
