@@ -24,12 +24,50 @@ use Faker\Factory;
 //     (new MotobikeModel())->marketHasModel();
 // });
 
+// Router::get('/', function () {
+//     //(new MotobikeController())->filterByKanaPrefix();
+//     $motobikeList = (new MotobikeModel())->filterMotobikeListByKanaPrefix('ア');
+//     echo '<pre>';
+//     print_r($motobikeList);
+//     echo '</pre>';
+// });
+
 Router::get('/', function () {
     //(new MotobikeController())->filterByKanaPrefix();
-    $motobikeList = (new MotobikeModel())->filterMotobikeListByKanaPrefix('ア');
-    echo '<pre>';
-    print_r($motobikeList);
-    echo '</pre>';
+    (new MotobikeController())->filterIndex();
+});
+
+Router::get('/hello', function () {
+    //(new MotobikeController())->filterByKanaPrefix();
+    echo '
+    <style>
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px solid black;
+    }
+
+    a:link {
+      color: green;
+      background-color: transparent;
+      text-decoration: none;
+    }
+
+    a.disabled {
+      color: currentColor;
+      opacity: 0.5;
+      pointer-events: none;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+    
+    
+    
+    ';
 });
 
 Connection::closeConnection();

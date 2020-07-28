@@ -2,9 +2,18 @@
 namespace App\Controller;
 
 use App\Config\Connection;
+use App\Model\MotobikeModel;
+use App\View\FilterIndex;
 
 class MotobikeController
-{
+{ 
+    private $view;
+
+    public function filterIndex()
+    {
+        $this->view = new FilterIndex(new MotobikeModel);
+        $this->view->output();
+    }
     public function filterByKanaPrefix()
     { 
     

@@ -114,7 +114,8 @@ class ComposerStaticInit27e7b19945eabfb6bedc868c776b410f
         ),
         'Doctrine\\DBAL\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
+            0 => __DIR__ . '/../..' . '/src/vendor/doctrine/dbal/lib/Doctrine/DBAL',
+            1 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
         ),
         'Doctrine\\Common\\Cache\\' => 
         array (

@@ -22,23 +22,81 @@ class MotobikeModel
         'ワ' => ['ワ', 'ヲ']
     ];
 
-    // private $alphabel_en = [
-    //     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
-    //     'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-    //     'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-    // ];
+     private $alphabel_en = [
+         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+         'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+         'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+     ];
 
     private $motoDisplacement = [
-        '50cc' => [0, 50],
+        '50cc未満' => [0, 50],
         '51-125cc' => [51, 125],
         '126-250cc' => [126, 250],
         '251-400cc' => [251, 400],
         '401-750cc' => [401, 750],
         '751-1000cc' => [751, 1000],
-        '1000cc' => [1000, 100000]
+        '1000cc以上' => [1000, 100000]
     ];
 
+    public function kanaPrefixHeader()
+    {
+        return array_keys($this->alphabel_jp);
+    }
 
+    public function namePrefixHeader()
+    {
+        return $this->alphabel_en;
+    }
+
+    public function motoDisplacementHeader()
+    {
+        return array_keys($this->motoDisplacement);
+    }
+
+    public function markertHeader()
+    {
+        // Query
+        /*
+            SELECT maker_code
+            FROM tbl_category_maker
+            GROUP BY maker_code
+            ORDER BY maker_code
+
+        */
+        $conn = Connection::getConnection();
+        $queryBuilder = $conn->createQueryBuilder();
+        $queryBuilder->select('maker_code')
+                    ->from('tbl_category_maker')
+                    ->groupby('maker_code')
+                    ->orderby('maker_code');
+
+        $stm = $queryBuilder->execute();
+        $makerCodes = $stm->fetchAll(PDO::FETCH_COLUMN);
+
+        // Query
+        /*
+            SELECT
+            m.model_maker_code,
+            IFNULL(SUM(v2.model_count),0) AS model_count,
+            m.model_maker_hyouji
+            FROM mst_model_maker m
+            LEFT JOIN mst_model_v2 v2
+                ON v2.model_maker_code = m.model_maker_code 
+            WHERE m.model_maker_code IN (1, 2, 3, 4)
+            GROUP BY m.model_maker_code
+            ORDER BY m.model_maker_select_view_no;
+        */
+        $queryBuilder->select('m.model_maker_hyouji')
+                    ->from('mst_model_maker', 'm')
+                    ->leftJoin('m', 'mst_model_v2', 'v2', 'v2.model_maker_code = m.model_maker_code')
+                    ->where($queryBuilder->expr()->in('m.model_maker_code', $makerCodes))
+                    ->groupby('m.model_maker_code')
+                    ->orderby('m.model_maker_select_view_no');
+
+        $stm = $queryBuilder->execute();
+        $makerNames = $stm->fetchAll(PDO::FETCH_COLUMN);
+        return $makerNames;
+    }
 
     public function kanaPrefixHasModel()
     {
@@ -74,9 +132,6 @@ class MotobikeModel
             }
         }
 
-        // echo '<pre>';
-        // var_dump($kanaPrefixs);
-        // echo '</pre>';
         return $kanaPrefixs;
     }
 
@@ -140,9 +195,6 @@ class MotobikeModel
         $stm = $queryBuilder->execute();
         $data = $stm->fetchAll(PDO::FETCH_COLUMN);
         $displacements = array();
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
 
         foreach($this->motoDisplacement as $key => $value)
         {
@@ -163,59 +215,6 @@ class MotobikeModel
         return $displacements;
     }
 
-    public function marketHasModel()
-    {
-        // Query
-        /*
-            SELECT maker_code
-            FROM tbl_category_maker
-            GROUP BY maker_code
-            ORDER BY maker_code
-
-        */
-
-        $conn = Connection::getConnection();
-        $queryBuilder = $conn->createQueryBuilder();
-        $queryBuilder->select('maker_code')
-                    ->from('tbl_category_maker')
-                    ->groupby('maker_code')
-                    ->orderby('maker_code');
-
-        $stm = $queryBuilder->execute();
-        $makerCodes = $stm->fetchAll(PDO::FETCH_COLUMN);
-
-        echo '<pre>';
-        print_r($makerCodes);
-        echo '</pre>';
-
-        // Query
-        /*
-            SELECT
-            m.model_maker_code,
-            IFNULL(SUM(v2.model_count),0) AS model_count,
-            m.model_maker_hyouji
-            FROM mst_model_maker m
-            LEFT JOIN mst_model_v2 v2
-                ON v2.model_maker_code = m.model_maker_code 
-            WHERE m.model_maker_code IN (1, 2, 3, 4)
-            GROUP BY m.model_maker_code
-            ORDER BY m.model_maker_select_view_no;
-        */
-        $queryBuilder->select('m.model_maker_hyouji')
-                    ->from('mst_model_maker', 'm')
-                    ->leftJoin('m', 'mst_model_v2', 'v2', 'v2.model_maker_code = m.model_maker_code')
-                    ->where($queryBuilder->expr()->in('m.model_maker_code', $makerCodes))
-                    ->groupby('m.model_maker_code')
-                    ->orderby('m.model_maker_select_view_no');
-
-        $stm = $queryBuilder->execute();
-        $makerNames = $stm->fetchAll(PDO::FETCH_COLUMN);
-        // echo '<pre>';
-        // print_r($makerNames);
-        // echo '</pre>';
-        return $makerNames;
-    }
-
     public function filterMotobikeListByKanaPrefix($kanaPrefix)
     {
         // Query
@@ -233,9 +232,9 @@ class MotobikeModel
                 AND model_count > 0
             ORDER BY model_kana_prefix;
         */
-        echo '<pre>';
-        print_r($this->alphabel_jp[$kanaPrefix]);
-        echo '</pre>';
+        // echo '<pre>';
+        // print_r($this->alphabel_jp[$kanaPrefix]);
+        // echo '</pre>';
 
         $kanaPrefixs = "'" . implode("', '", $this->alphabel_jp[$kanaPrefix]) . "'";
 

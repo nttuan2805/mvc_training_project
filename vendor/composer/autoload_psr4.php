@@ -18,7 +18,7 @@ return array(
     'Faker\\' => array($baseDir . '/src/vendor/fzaninotto/faker/src/Faker', $vendorDir . '/fzaninotto/faker/src/Faker'),
     'Envms\\FluentPDO\\' => array($vendorDir . '/envms/fluentpdo/src'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
-    'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib/Doctrine/DBAL'),
+    'Doctrine\\DBAL\\' => array($baseDir . '/src/vendor/doctrine/dbal/lib/Doctrine/DBAL', $vendorDir . '/doctrine/dbal/lib/Doctrine/DBAL'),
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/event-manager/lib/Doctrine/Common'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
