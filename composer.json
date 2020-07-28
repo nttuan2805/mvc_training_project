@@ -13,7 +13,8 @@
     "autoload-dev": {
         "psr-4" : {
             "Faker\\Test\\": "src/vendor/fzaninotto/faker/test/Faker/",
-            "Twig\\Tests\\" : "src/vendor/twig/twig/tests/"
+            "Twig\\Tests\\" : "src/vendor/twig/twig/tests/",
+            "Test\\": "test/"
         }
     },
     "require": {
@@ -23,7 +24,6 @@
         "doctrine/dbal": "^2.10"
     },
     "require-dev": {
-        "phpunit/phpunit": "5",
-        "phpunit/dbunit": "2"
+        "phpunit/phpunit": "8"
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -14,8 +14,6 @@ class BankAccountException extends RuntimeException
 
 /**
  * A bank account.
- *
- * @since      Class available since Release 2.3.0
  */
 class BankAccount
 {
@@ -37,24 +35,10 @@ class BankAccount
     }
 
     /**
-     * Sets the bank account's balance.
-     *
-     * @param  float                $balance
-     * @throws BankAccountException
-     */
-    protected function setBalance($balance)
-    {
-        if ($balance >= 0) {
-            $this->balance = $balance;
-        } else {
-            throw new BankAccountException;
-        }
-    }
-
-    /**
      * Deposits an amount of money to the bank account.
      *
-     * @param  float                $balance
+     * @param float $balance
+     *
      * @throws BankAccountException
      */
     public function depositMoney($balance)
@@ -67,7 +51,8 @@ class BankAccount
     /**
      * Withdraws an amount of money from the bank account.
      *
-     * @param  float                $balance
+     * @param float $balance
+     *
      * @throws BankAccountException
      */
     public function withdrawMoney($balance)
@@ -75,5 +60,21 @@ class BankAccount
         $this->setBalance($this->getBalance() - $balance);
 
         return $this->getBalance();
+    }
+
+    /**
+     * Sets the bank account's balance.
+     *
+     * @param float $balance
+     *
+     * @throws BankAccountException
+     */
+    protected function setBalance($balance): void
+    {
+        if ($balance >= 0) {
+            $this->balance = $balance;
+        } else {
+            throw new BankAccountException;
+        }
     }
 }

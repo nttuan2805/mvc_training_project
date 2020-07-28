@@ -13,11 +13,11 @@ class Connection
         
     }
 
-    public static function getConnection()
+    public static function getConnection($dbType)
     {
         if (!isset(self::$conn))
         {
-            $db = Config::getInstance()->get('Db');
+            $db = Config::getInstance()->get($dbType);
 
             $options = [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

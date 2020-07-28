@@ -1,5 +1,3 @@
-use webike_testing;
-
 -- MySQL Workbench Forward Engineering
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -81,12 +79,7 @@ CREATE TABLE IF NOT EXISTS `webike_testing`.`mst_dealer` (
   `dealer_market_status` CHAR(1) NULL DEFAULT NULL,
   `dealer_default_sale_type` CHAR(1) NULL DEFAULT NULL,
   `dealer_gid` VARCHAR(32) NULL DEFAULT NULL,
-  PRIMARY KEY (`dealer_searchkey`),
-  INDEX `idx_map` (`dealer_lon` ASC, `dealer_lat` ASC) VISIBLE,
-  INDEX `idx_dealer_todouhuken` (`dealer_todouhuken` ASC) VISIBLE,
-  INDEX `idx_dealer_charge_type` (`dealer_charge_type` ASC) VISIBLE,
-  INDEX `idx_dealer_status` (`dealer_status` ASC) VISIBLE,
-  INDEX `idx_dealer_todouhuken_code` (`dealer_todouhuken_code` ASC) VISIBLE)
+  PRIMARY KEY (`dealer_searchkey`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -107,9 +100,7 @@ CREATE TABLE IF NOT EXISTS `webike_testing`.`mst_model_maker` (
   `model_top_hyouji_flg` INT NULL DEFAULT '0',
   `model_maker_gcode` INT NULL DEFAULT NULL,
   `model_special_maker_flg` INT NULL DEFAULT '0' COMMENT 'シリーズを使うメーカのフラグ',
-  PRIMARY KEY (`model_maker_code`),
-  UNIQUE INDEX `model_maker_search` (`model_maker_search` ASC) VISIBLE,
-  INDEX `idx_model_maker_view_no` (`model_maker_view_no` ASC) VISIBLE)
+  PRIMARY KEY (`model_maker_code`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -175,12 +166,7 @@ CREATE TABLE IF NOT EXISTS `webike_testing`.`mst_model_v2` (
   `model_kakaku_max` INT NULL DEFAULT NULL,
   `model_kakaku_ave` INT NULL DEFAULT NULL,
   `model_rank` SMALLINT NULL DEFAULT NULL,
-  PRIMARY KEY (`model_code`),
-  UNIQUE INDEX `model_search_key` (`model_search_key` ASC) VISIBLE,
-  INDEX `idx_model_maker_code` (`model_maker_code` ASC) VISIBLE,
-  INDEX `idx_model_name_prefix` (`model_maker_code` ASC, `model_name_prefix` ASC) VISIBLE,
-  INDEX `idx_model_kana_prefix` (`model_maker_code` ASC, `model_kana_prefix` ASC) VISIBLE,
-  INDEX `idx_model_maker_view_no` (`model_maker_code` ASC, `model_displacement` ASC, `model_motortype_code` ASC, `model_hyouji` ASC) VISIBLE)
+  PRIMARY KEY (`model_code`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -210,8 +196,7 @@ CREATE TABLE IF NOT EXISTS `webike_testing`.`mst_series` (
   `display_order` INT NULL DEFAULT '0',
   `created_date` DATETIME NULL DEFAULT NULL,
   `last_update` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`series_code`),
-  UNIQUE INDEX `series_name_UNIQUE` (`series_name` ASC) VISIBLE)
+  PRIMARY KEY (`series_code`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 38
 DEFAULT CHARACTER SET = utf8;
@@ -240,8 +225,7 @@ CREATE TABLE IF NOT EXISTS `webike_testing`.`mst_todouhuken` (
   `todouhuken_lat` CHAR(20) NOT NULL,
   `todouhuken_gcode` VARCHAR(2) NULL DEFAULT NULL,
   `todouhuken_ycode` VARCHAR(2) NULL DEFAULT NULL,
-  PRIMARY KEY (`todouhuken_code`),
-  INDEX `idx_todouhuken_name` (`todouhuken_name` ASC) VISIBLE)
+  PRIMARY KEY (`todouhuken_code`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -380,17 +364,7 @@ CREATE TABLE IF NOT EXISTS `webike_testing`.`search_motorcycle` (
   `model_full_custom` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '繝薙Ν繝会ｼ上ヵ繝ｫ繧ｫ繧ｹ繧ｿ繝',
   `motorcycle_new_entry` DATETIME NULL DEFAULT NULL,
   `motorcycle_last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '車両更新日時\\n',
-  PRIMARY KEY (`renkei_type`, `motorcycle_no`),
-  INDEX `idx_search_motorcycle_price` (`motorcycle_ippan_kakaku` ASC) VISIBLE,
-  INDEX `idx_search_motorcycle_soukou` (`sort_soukou` ASC) VISIBLE,
-  INDEX `idx_search_motorcycle_nensiki` (`sort_nensiki` ASC) VISIBLE,
-  INDEX `idx_search_motorcycle_pref` (`dealer_todouhuken_code` ASC) VISIBLE,
-  INDEX `idx_search_motorcycle_haikiryo` (`motorcycle_haikiryo` ASC) VISIBLE,
-  INDEX `idx_search_motorcycle_maker_code` (`model_maker_search` ASC, `motorcycle_maker_code` ASC) VISIBLE,
-  INDEX `idx_search_motorcycle_model_code` (`model_search_key` ASC, `motorcycle_model_code` ASC) VISIBLE,
-  INDEX `idx_search_motorcycle_moto_no` (`motorcycle_no` ASC) VISIBLE,
-  INDEX `idx_update` (`motorcycle_last_update` ASC) VISIBLE,
-  INDEX `idx_search_motorcycle_renkei_model` (`motorcycle_model_code` ASC, `renkei_type` ASC) VISIBLE)
+  PRIMARY KEY (`renkei_type`, `motorcycle_no`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -412,6 +386,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `webike_testing`.`tbl_model_type`
 -- -----------------------------------------------------
+SET sql_mode = '';
 CREATE TABLE IF NOT EXISTS `webike_testing`.`tbl_model_type` (
   `model_code` INT NOT NULL COMMENT '車種コード',
   `model_type_code` INT NOT NULL DEFAULT '0' COMMENT '車種タイプコード',
@@ -495,16 +470,7 @@ CREATE TABLE IF NOT EXISTS `webike_testing`.`tbl_motorcycle` (
   `motorcycle_new_entry` DATETIME NULL DEFAULT NULL,
   `motorcycle_last_update_id` CHAR(20) NULL DEFAULT NULL,
   `motorcycle_last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`motorcycle_no`),
-  INDEX `idx_motorcycle_model_code` (`motorcycle_model_code` ASC) VISIBLE,
-  INDEX `idx_motorcycle_searchkey` (`motorcycle_searchkey` ASC) VISIBLE,
-  INDEX `idx_motorcycle_jyoukyo` (`motorcycle_jyoukyo` ASC) VISIBLE,
-  INDEX `idx_motorcycle_sale_type` (`motorcycle_sale_type` ASC) VISIBLE,
-  INDEX `idx_motorcycle_soukou` (`motorcycle_soukou` ASC) VISIBLE,
-  INDEX `idx_motorcycle_ippan_kakaku` (`motorcycle_ippan_kakaku` ASC) VISIBLE,
-  INDEX `idx_motorcycle_type` (`motorcycle_type` ASC) VISIBLE,
-  INDEX `idx_gyouhan_pr` (`motorcycle_gyouhan_pr` ASC) VISIBLE,
-  INDEX `idx_new_bike` (`motorcycle_sale_type` ASC, `motorcycle_jyoukyo` ASC, `motorcycle_ippan_kakaku` ASC, `motorcycle_last_update` ASC) VISIBLE)
+  PRIMARY KEY (`motorcycle_no`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 242523
 DEFAULT CHARACTER SET = utf8;

@@ -39,8 +39,32 @@ class MotobikeModel
     ];
 
 
+    public function testInsert()
+    {
+        $inputData = [
+            ['model_code' => 0, 'model_kana_prefix' =>  'ア'],
+            ['model_code' => 1, 'model_kana_prefix' =>  ''  ],
+            ['model_code' => 2, 'model_kana_prefix' =>  'マ'],
+            ['model_code' => 3, 'model_kana_prefix' =>  'キ'],
+            ['model_code' => 4, 'model_kana_prefix' =>  'ア'],
+            ['model_code' => 5, 'model_kana_prefix' =>  ''  ],
+            ['model_code' => 6, 'model_kana_prefix' =>  'ヌ']
+        ];
 
-    public function kanaPrefixHasModel()
+        $conn = Connection::getConnection('DbTest');
+        $queryBuilder = $conn->createQueryBuilder();
+
+        foreach($inputData as $data)
+        {
+            $queryBuilder->insert('mst_model_v2')
+            ->values(array('model_code' => $data['model_code'], 'model_kana_prefix' =>  "'".$data['model_kana_prefix']."'"))
+            ->execute(); 
+        }   
+        
+        $this->kanaPrefixHasModel('DbTest');
+    }
+
+    public function kanaPrefixHasModel($db)
     {
         // Query
         /*
@@ -50,7 +74,7 @@ class MotobikeModel
             group by model_kana_prefix
             order by model_kana_prefix;
         */
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection($db);
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('model_kana_prefix')
                     ->from('mst_model_v2')
@@ -74,10 +98,10 @@ class MotobikeModel
             }
         }
 
-         echo '<pre>';
-         print_r($kanaPrefixs);
-         echo '</pre>';
-        //return $kanaPrefixs;
+        //  echo '<pre>';
+        //  print_r($kanaPrefixs);
+        //  echo '</pre>';
+        return $kanaPrefixs;
     }
 
     public function namePrefixHasModel()
@@ -90,7 +114,7 @@ class MotobikeModel
             group by model_kana_prefix
             order by model_kana_prefix;
         */
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection('Db');
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('model_name_prefix')
                     ->from('mst_model_v2')
@@ -129,7 +153,7 @@ class MotobikeModel
             group by model_displacement
             order by model_displacement;
         */
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection('Db');
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('model_displacement')
                     ->from('mst_model_v2')
@@ -174,7 +198,7 @@ class MotobikeModel
 
         */
 
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection('Db');
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('maker_code')
                     ->from('tbl_category_maker')
@@ -239,11 +263,10 @@ class MotobikeModel
 
         $kanaPrefixs = "'" . implode("', '", $this->alphabel_jp[$kanaPrefix]) . "'";
 
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection('Db');
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select(' model_name')
                         ->from('mst_model_v2')
-                        //->where('model_kana_prefix IN (:kanas)')
                         ->where($queryBuilder->expr()->in('model_kana_prefix', $kanaPrefixs))
                         ->andWhere('model_count > 0')
                         ->orderby('model_kana_prefix');

@@ -7,6 +7,7 @@ use App\Lib\Router;
 use App\Controller\MotobikeController;
 use App\Model\MotobikeModel;
 use Faker\Factory;
+use Test\URLTest;
 
 // Router::get('/', function () {
 //     echo 'Hello World';
@@ -18,18 +19,20 @@ use Faker\Factory;
 //         'status' => 'ok'
 //     ]);
 // });
-
-// Router::get('/mvc_training_project/', function () {
-//     //(new MotobikeController())->filterByKanaPrefix();
-//     (new MotobikeModel())->kanaPrefixHasModel();
 // });
 
 Router::get('/mvc_training_project/', function () {
     //(new MotobikeController())->filterByKanaPrefix();
-    $motobikeList = (new MotobikeModel())->filterMotobikeListByKanaPrefix('ア');
-    echo '<pre>';
-    print_r($motobikeList);
-    echo '</pre>';
+    // $motobikeList = (new MotobikeModel())->filterMotobikeListByKanaPrefix('ア');
+    // echo '<pre>';
+    // print_r($motobikeList);
+    // echo '</pre>';
+
+    // echo __DIR__.'/vendor/autoload.php';
+    // $test = new URLTest();
+    // echo $test->test();
+
+    (new MotobikeModel())->testInsert();
 });
 
 Connection::closeConnection();

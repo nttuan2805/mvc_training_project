@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -7,56 +7,59 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PHPUnit\Runner;
 
-/**
- * This class defines the current version of PHPUnit.
- *
- * @since Class available since Release 2.0.0
- */
-class PHPUnit_Runner_Version
+use SebastianBergmann\Version as VersionId;
+
+final class Version
 {
+    /**
+     * @var string
+     */
     private static $pharVersion;
+
+    /**
+     * @var string
+     */
     private static $version;
 
     /**
      * Returns the current version of PHPUnit.
-     *
-     * @return string
      */
-    public static function id()
+    public static function id(): string
     {
         if (self::$pharVersion !== null) {
             return self::$pharVersion;
         }
 
         if (self::$version === null) {
-            $version       = new SebastianBergmann\Version('5.0.0', dirname(dirname(__DIR__)));
+            $version       = new VersionId('8.0.0', \dirname(__DIR__, 2));
             self::$version = $version->getVersion();
         }
 
         return self::$version;
     }
 
-    /**
-     * @return string
-     */
-    public static function getVersionString()
+    public static function series(): string
+    {
+        if (\strpos(self::id(), '-')) {
+            $version = \explode('-', self::id())[0];
+        } else {
+            $version = self::id();
+        }
+
+        return \implode('.', \array_slice(\explode('.', $version), 0, 2));
+    }
+
+    public static function getVersionString(): string
     {
         return 'PHPUnit ' . self::id() . ' by Sebastian Bergmann and contributors.';
     }
 
-    /**
-     * @return string
-     * @since  Method available since Release 4.0.0
-     */
-    public static function getReleaseChannel()
+    public static function getReleaseChannel(): string
     {
-        if (strpos(self::$pharVersion, 'alpha') !== false) {
-            return '-alpha';
-        }
-
-        if (strpos(self::$pharVersion, 'beta') !== false) {
-            return '-beta';
+        if (\strpos(self::$pharVersion, '-') !== false) {
+            return '-nightly';
         }
 
         return '';
