@@ -8,7 +8,7 @@ class StupidTest extends TestCase
 {
     public function testTrueIsTrue()
     {
-        $foo = false;
+        $foo = true;
         $this->assertTrue($foo);
     }
 }

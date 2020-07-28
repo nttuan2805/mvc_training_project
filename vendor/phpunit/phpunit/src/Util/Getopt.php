@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,23 +9,15 @@
  */
 namespace PHPUnit\Util;
 
-use PHPUnit\Framework\Exception;
-
 /**
- * Command-line options parsing class.
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 final class Getopt
 {
     /**
-     * @param array      $args
-     * @param string     $short_options
-     * @param null|array $long_options
-     *
      * @throws Exception
-     *
-     * @return array
      */
-    public static function getopt(array $args, string $short_options, array $long_options = null): array
+    public static function parse(array $args, string $short_options, array $long_options = null): array
     {
         if (empty($args)) {
             return [[], []];
@@ -66,6 +58,7 @@ final class Getopt
 
                 continue;
             }
+
             if (\strlen($arg) > 1 && $arg[1] === '-') {
                 self::parseLongOption(
                     \substr($arg, 2),
@@ -87,11 +80,6 @@ final class Getopt
     }
 
     /**
-     * @param string $arg
-     * @param string $short_options
-     * @param array  $opts
-     * @param array  $args
-     *
      * @throws Exception
      */
     private static function parseShortOption(string $arg, string $short_options, array &$opts, array &$args): void
@@ -104,7 +92,7 @@ final class Getopt
 
             if ($arg[$i] === ':' || ($spec = \strstr($short_options, $opt)) === false) {
                 throw new Exception(
-                    "unrecognized option -- $opt"
+                    "unrecognized option -- {$opt}"
                 );
             }
 
@@ -119,7 +107,7 @@ final class Getopt
                     /* @noinspection ComparisonOperandsOrderInspection */
                     if (false === $opt_arg = \current($args)) {
                         throw new Exception(
-                            "option requires an argument -- $opt"
+                            "option requires an argument -- {$opt}"
                         );
                     }
 
@@ -132,11 +120,6 @@ final class Getopt
     }
 
     /**
-     * @param string $arg
-     * @param array  $long_options
-     * @param array  $opts
-     * @param array  $args
-     *
      * @throws Exception
      */
     private static function parseLongOption(string $arg, array $long_options, array &$opts, array &$args): void
@@ -152,8 +135,7 @@ final class Getopt
 
         $opt_len = \strlen($opt);
 
-        for ($i = 0; $i < $count; $i++) {
-            $long_opt  = $long_options[$i];
+        foreach ($long_options as $i => $long_opt) {
             $opt_start = \substr($long_opt, 0, $opt_len);
 
             if ($opt_start !== $opt) {
@@ -162,30 +144,27 @@ final class Getopt
 
             $opt_rest = \substr($long_opt, $opt_len);
 
-            if ($opt_rest !== '' && $i + 1 < $count && $opt[0] !== '=' &&
-                \strpos($long_options[$i + 1], $opt) === 0) {
+            if ($opt_rest !== '' && $i + 1 < $count && $opt[0] !== '=' && \strpos($long_options[$i + 1], $opt) === 0) {
                 throw new Exception(
-                    "option --$opt is ambiguous"
+                    "option --{$opt} is ambiguous"
                 );
             }
 
             if (\substr($long_opt, -1) === '=') {
-                if (\substr($long_opt, -2) !== '==') {
-                    /* @noinspection StrlenInEmptyStringCheckContextInspection */
-                    if (!\strlen($opt_arg)) {
-                        /* @noinspection ComparisonOperandsOrderInspection */
-                        if (false === $opt_arg = \current($args)) {
-                            throw new Exception(
-                                "option --$opt requires an argument"
-                            );
-                        }
-
-                        \next($args);
+                /* @noinspection StrlenInEmptyStringCheckContextInspection */
+                if (\substr($long_opt, -2) !== '==' && !\strlen((string) $opt_arg)) {
+                    /* @noinspection ComparisonOperandsOrderInspection */
+                    if (false === $opt_arg = \current($args)) {
+                        throw new Exception(
+                            "option --{$opt} requires an argument"
+                        );
                     }
+
+                    \next($args);
                 }
             } elseif ($opt_arg) {
                 throw new Exception(
-                    "option --$opt doesn't allow an argument"
+                    "option --{$opt} doesn't allow an argument"
                 );
             }
 
@@ -195,6 +174,6 @@ final class Getopt
             return;
         }
 
-        throw new Exception("unrecognized option --$opt");
+        throw new Exception("unrecognized option --{$opt}");
     }
 }

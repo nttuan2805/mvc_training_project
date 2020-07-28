@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,16 +9,18 @@
  */
 namespace PHPUnit\Util;
 
-use DOMCharacterData;
-use DOMDocument;
-use DOMElement;
-use DOMNode;
-use DOMText;
 use PHPUnit\Framework\Exception;
-use ReflectionClass;
 
+/**
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ */
 final class Xml
 {
+    public static function import(\DOMElement $element): \DOMElement
+    {
+        return (new \DOMDocument)->importNode($element, true);
+    }
+
     /**
      * Load an $actual document into a DOMDocument.  This is called
      * from the selector assertions.
@@ -33,19 +35,13 @@ final class Xml
      * not a string as it currently does.  To load a file into a
      * DOMDocument, use loadFile() instead.
      *
-     * @param DOMDocument|string $actual
-     * @param bool               $isHtml
-     * @param string             $filename
-     * @param bool               $xinclude
-     * @param bool               $strict
+     * @param \DOMDocument|string $actual
      *
      * @throws Exception
-     *
-     * @return DOMDocument
      */
-    public static function load($actual, bool $isHtml = false, string $filename = '', bool $xinclude = false, bool $strict = false): DOMDocument
+    public static function load($actual, bool $isHtml = false, string $filename = '', bool $xinclude = false, bool $strict = false): \DOMDocument
     {
-        if ($actual instanceof DOMDocument) {
+        if ($actual instanceof \DOMDocument) {
             return $actual;
         }
 
@@ -63,7 +59,7 @@ final class Xml
             @\chdir(\dirname($filename));
         }
 
-        $document                     = new DOMDocument;
+        $document                     = new \DOMDocument;
         $document->preserveWhiteSpace = false;
 
         $internal  = \libxml_use_internal_errors(true);
@@ -120,16 +116,9 @@ final class Xml
     /**
      * Loads an XML (or HTML) file into a DOMDocument object.
      *
-     * @param string $filename
-     * @param bool   $isHtml
-     * @param bool   $xinclude
-     * @param bool   $strict
-     *
      * @throws Exception
-     *
-     * @return DOMDocument
      */
-    public static function loadFile(string $filename, bool $isHtml = false, bool $xinclude = false, bool $strict = false): DOMDocument
+    public static function loadFile(string $filename, bool $isHtml = false, bool $xinclude = false, bool $strict = false): \DOMDocument
     {
         $reporting = \error_reporting(0);
         $contents  = \file_get_contents($filename);
@@ -148,11 +137,11 @@ final class Xml
         return self::load($contents, $isHtml, $filename, $xinclude, $strict);
     }
 
-    public static function removeCharacterDataNodes(DOMNode $node): void
+    public static function removeCharacterDataNodes(\DOMNode $node): void
     {
         if ($node->hasChildNodes()) {
             for ($i = $node->childNodes->length - 1; $i >= 0; $i--) {
-                if (($child = $node->childNodes->item($i)) instanceof DOMCharacterData) {
+                if (($child = $node->childNodes->item($i)) instanceof \DOMCharacterData) {
                     $node->removeChild($child);
                 }
             }
@@ -166,10 +155,6 @@ final class Xml
      * and FFFF (not even as character reference).
      *
      * @see https://www.w3.org/TR/xml/#charsets
-     *
-     * @param string $string
-     *
-     * @return string
      */
     public static function prepareString(string $string): string
     {
@@ -178,19 +163,15 @@ final class Xml
             '',
             \htmlspecialchars(
                 self::convertToUtf8($string),
-                ENT_QUOTES
+                \ENT_QUOTES
             )
         );
     }
 
     /**
      * "Convert" a DOMElement object into a PHP variable.
-     *
-     * @param DOMElement $element
-     *
-     * @return mixed
      */
-    public static function xmlToVariable(DOMElement $element)
+    public static function xmlToVariable(\DOMElement $element)
     {
         $variable = null;
 
@@ -199,12 +180,12 @@ final class Xml
                 $variable = [];
 
                 foreach ($element->childNodes as $entry) {
-                    if (!$entry instanceof DOMElement || $entry->tagName !== 'element') {
+                    if (!$entry instanceof \DOMElement || $entry->tagName !== 'element') {
                         continue;
                     }
                     $item = $entry->childNodes->item(0);
 
-                    if ($item instanceof DOMText) {
+                    if ($item instanceof \DOMText) {
                         $item = $entry->childNodes->item(1);
                     }
 
@@ -227,13 +208,24 @@ final class Xml
                     $constructorArgs = [];
 
                     foreach ($arguments as $argument) {
-                        if ($argument instanceof DOMElement) {
+                        if ($argument instanceof \DOMElement) {
                             $constructorArgs[] = self::xmlToVariable($argument);
                         }
                     }
 
-                    $class    = new ReflectionClass($className);
-                    $variable = $class->newInstanceArgs($constructorArgs);
+                    try {
+                        \assert(\class_exists($className));
+
+                        $variable = (new \ReflectionClass($className))->newInstanceArgs($constructorArgs);
+                        // @codeCoverageIgnoreStart
+                    } catch (\ReflectionException $e) {
+                        throw new Exception(
+                            $e->getMessage(),
+                            (int) $e->getCode(),
+                            $e
+                        );
+                    }
+                    // @codeCoverageIgnoreEnd
                 } else {
                     $variable = new $className;
                 }
@@ -261,11 +253,7 @@ final class Xml
     private static function convertToUtf8(string $string): string
     {
         if (!self::isUtf8($string)) {
-            if (\function_exists('mb_convert_encoding')) {
-                return \mb_convert_encoding($string, 'UTF-8');
-            }
-
-            return \utf8_encode($string);
+            $string = \mb_convert_encoding($string, 'UTF-8');
         }
 
         return $string;

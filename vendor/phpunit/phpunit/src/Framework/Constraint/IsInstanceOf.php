@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,36 +9,26 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use ReflectionClass;
-use ReflectionException;
-
 /**
  * Constraint that asserts that the object it is evaluated for is an instance
  * of a given class.
  *
  * The expected class name is passed in the constructor.
  */
-class IsInstanceOf extends Constraint
+final class IsInstanceOf extends Constraint
 {
     /**
      * @var string
      */
     private $className;
 
-    /**
-     * @param string $className
-     */
-    public function __construct($className)
+    public function __construct(string $className)
     {
-        parent::__construct();
-
         $this->className = $className;
     }
 
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -54,8 +44,6 @@ class IsInstanceOf extends Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
@@ -70,29 +58,27 @@ class IsInstanceOf extends Constraint
      *
      * @param mixed $other evaluated value or object
      *
-     * @throws \Exception
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {
         return \sprintf(
             '%s is an instance of %s "%s"',
-            $this->exporter->shortenedExport($other),
+            $this->exporter()->shortenedExport($other),
             $this->getType(),
             $this->className
         );
     }
 
-    private function getType()
+    private function getType(): string
     {
         try {
-            $reflection = new ReflectionClass($this->className);
+            $reflection = new \ReflectionClass($this->className);
+
             if ($reflection->isInterface()) {
                 return 'interface';
             }
-        } catch (ReflectionException $e) {
+        } catch (\ReflectionException $e) {
         }
 
         return 'class';

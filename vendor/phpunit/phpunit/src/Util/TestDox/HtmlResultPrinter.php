@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,15 +9,17 @@
  */
 namespace PHPUnit\Util\TestDox;
 
+use PHPUnit\Framework\TestResult;
+
 /**
- * Prints TestDox documentation in HTML format.
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 final class HtmlResultPrinter extends ResultPrinter
 {
     /**
      * @var string
      */
-    private const PAGE_HEADER = <<<EOT
+    private const PAGE_HEADER = <<<'EOT'
 <!doctype html>
 <html lang="en">
     <head>
@@ -53,7 +55,7 @@ EOT;
     /**
      * @var string
      */
-    private const CLASS_HEADER = <<<EOT
+    private const CLASS_HEADER = <<<'EOT'
 
         <h2 id="%s">%s</h2>
         <ul>
@@ -63,18 +65,22 @@ EOT;
     /**
      * @var string
      */
-    private const CLASS_FOOTER = <<<EOT
+    private const CLASS_FOOTER = <<<'EOT'
         </ul>
 EOT;
 
     /**
      * @var string
      */
-    private const PAGE_FOOTER = <<<EOT
+    private const PAGE_FOOTER = <<<'EOT'
 
     </body>
 </html>
 EOT;
+
+    public function printResult(TestResult $result): void
+    {
+    }
 
     /**
      * Handler for 'start run' event.
@@ -86,8 +92,6 @@ EOT;
 
     /**
      * Handler for 'start class' event.
-     *
-     * @param string $name
      */
     protected function startClass(string $name): void
     {
@@ -102,11 +106,8 @@ EOT;
 
     /**
      * Handler for 'on test' event.
-     *
-     * @param string $name
-     * @param bool   $success
      */
-    protected function onTest($name, bool $success = true): void
+    protected function onTest(string $name, bool $success = true): void
     {
         $this->write(
             \sprintf(
@@ -120,8 +121,6 @@ EOT;
 
     /**
      * Handler for 'end class' event.
-     *
-     * @param string $name
      */
     protected function endClass(string $name): void
     {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,7 +9,7 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use ReflectionClass;
+use PHPUnit\Framework\Exception;
 
 /**
  * Constraint that asserts that the class it is evaluated for has a given
@@ -17,12 +17,10 @@ use ReflectionClass;
  *
  * The attribute name is passed in the constructor.
  */
-class ClassHasStaticAttribute extends ClassHasAttribute
+final class ClassHasStaticAttribute extends ClassHasAttribute
 {
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -37,18 +35,24 @@ class ClassHasStaticAttribute extends ClassHasAttribute
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
-        $class = new ReflectionClass($other);
+        try {
+            $class = new \ReflectionClass($other);
 
-        if ($class->hasProperty($this->attributeName())) {
-            $attribute = $class->getProperty($this->attributeName());
-
-            return $attribute->isStatic();
+            if ($class->hasProperty($this->attributeName())) {
+                return $class->getProperty($this->attributeName())->isStatic();
+            }
+            // @codeCoverageIgnoreStart
+        } catch (\ReflectionException $e) {
+            throw new Exception(
+                $e->getMessage(),
+                (int) $e->getCode(),
+                $e
+            );
         }
+        // @codeCoverageIgnoreEnd
 
         return false;
     }

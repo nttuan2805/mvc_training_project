@@ -13,7 +13,6 @@ return array(
     'Test\\' => array($baseDir . '/test'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
-    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src/Prophecy'),
     'Faker\\Test\\' => array($baseDir . '/src/vendor/fzaninotto/faker/test/Faker'),
     'Faker\\' => array($baseDir . '/src/vendor/fzaninotto/faker/src/Faker', $vendorDir . '/fzaninotto/faker/src/Faker'),
