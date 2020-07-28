@@ -6,6 +6,8 @@ use App\Config\Database;
 use App\Lib\Router;
 use App\Controller\MotobikeController;
 use App\Model\MotobikeModel;
+use App\View\TestSmarty;
+use App\View\TwigTest;
 use Faker\Factory;
 
 // Router::get('/', function () {
@@ -39,35 +41,7 @@ Router::get('/', function () {
 
 Router::get('/hello', function () {
     //(new MotobikeController())->filterByKanaPrefix();
-    echo '
-    <style>
-    table {
-      border-collapse: collapse;
-      width: 80%;
-      margin: 0 auto;
-    }
-
-    table, th, td {
-      border: 1px solid black;
-    }
-
-    a:link {
-      color: green;
-      background-color: transparent;
-      text-decoration: none;
-    }
-
-    a.disabled {
-      color: currentColor;
-      opacity: 0.5;
-      pointer-events: none;
-      cursor: not-allowed;
-      text-decoration: none;
-    }
-    
-    
-    
-    ';
+    (new TwigTest())->output();
 });
 
 Connection::closeConnection();
