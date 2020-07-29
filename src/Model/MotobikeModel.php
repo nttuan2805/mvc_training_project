@@ -52,6 +52,7 @@ class MotobikeModel
         ];
 
         $conn = Connection::getConnection('DbTest');
+        $conn->beginTransaction();
         $queryBuilder = $conn->createQueryBuilder();
 
         foreach($inputData as $data)
@@ -61,6 +62,10 @@ class MotobikeModel
             ->execute(); 
         }   
         
+        echo "before rollback <br />";
+        $this->kanaPrefixHasModel('DbTest');
+        $conn->rollBack();
+        echo "after rollback <br />";
         $this->kanaPrefixHasModel('DbTest');
     }
 
@@ -98,9 +103,9 @@ class MotobikeModel
             }
         }
 
-        //  echo '<pre>';
-        //  print_r($kanaPrefixs);
-        //  echo '</pre>';
+        //   echo '<pre>';
+        //   print_r($kanaPrefixs);
+        //   echo '</pre>';
         return $kanaPrefixs;
     }
 
