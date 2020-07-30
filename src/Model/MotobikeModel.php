@@ -28,20 +28,19 @@ class MotobikeModel
      ];
 
     private $motoDisplacement = [
-        '50cc' => [0, 50],
+        '50' => [0, 50],
         '51-125' => [51, 125],
         '126-250' => [126, 250],
         '251-400' => [251, 400],
         '401-750' => [401, 750],
         '751-1000' => [751, 1000],
-        '1000' => [1000, 100000]
+        '1000Up' => [1000, 100000]
     ];
 
     public function kanaPrefixHeader()
     {
         return array_keys($this->alphabel_jp);
     }
-
     public function namePrefixHeader()
     {
         return $this->alphabel_en;
@@ -52,7 +51,7 @@ class MotobikeModel
         return array_keys($this->motoDisplacement);
     }
 
-    public function markerHeader()
+    public function markerHeader($db)
     {
         // Query
         /*
@@ -61,9 +60,8 @@ class MotobikeModel
             model_maker_hyouji
             FROM mst_model_maker
             GROUP BY model_maker_code, model_maker_hyouji
-
         */
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection($db);
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('model_maker_code', 'model_maker_hyouji')
                     ->from('mst_model_maker')
@@ -77,7 +75,7 @@ class MotobikeModel
         return $makers;
     }
 
-    public function kanaPrefixHasModel()
+    public function kanaPrefixHasModel($db)
     {
         // Query
         /*
@@ -87,7 +85,7 @@ class MotobikeModel
             group by model_kana_prefix
             order by model_kana_prefix;
         */
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection($db);
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('model_kana_prefix')
                     ->from('mst_model_v2')
@@ -114,7 +112,7 @@ class MotobikeModel
         return $kanaPrefixs;
     }
 
-    public function namePrefixHasModel()
+    public function namePrefixHasModel($db)
     {
         // Query
         /*
@@ -124,7 +122,7 @@ class MotobikeModel
             group by model_kana_prefix
             order by model_kana_prefix;
         */
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection($db);
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('model_name_prefix')
                     ->from('mst_model_v2')
@@ -134,11 +132,10 @@ class MotobikeModel
 
         $stm = $queryBuilder->execute();
         $namePrefixs = $stm->fetchAll(PDO::FETCH_COLUMN);
-
         return $namePrefixs;
     }
 
-    public function displacementHasModel()
+    public function displacementHasModel($db)
     {
         // Query
         /*
@@ -147,7 +144,7 @@ class MotobikeModel
             group by model_displacement
             order by model_displacement;
         */
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection($db);
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('model_displacement')
                     ->from('mst_model_v2')
@@ -174,7 +171,7 @@ class MotobikeModel
         return $displacements;
     }
 
-    public function markerHasModel()
+    public function markerHasModel($db)
     {
         // Query
         /*
@@ -184,7 +181,8 @@ class MotobikeModel
             ORDER BY maker_code
 
         */
-        $conn = Connection::getConnection();
+
+        $conn = Connection::getConnection($db);
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('maker_code')
                     ->from('tbl_category_maker')
@@ -207,7 +205,8 @@ class MotobikeModel
             GROUP BY m.model_maker_code
             ORDER BY m.model_maker_select_view_no;
         */
-        $queryBuilder->select('m.model_maker_code')
+
+        $queryBuilder->select('m.model_maker_hyouji')
                     ->from('mst_model_maker', 'm')
                     ->leftJoin('m', 'mst_model_v2', 'v2', 'v2.model_maker_code = m.model_maker_code')
                     ->where($queryBuilder->expr()->in('m.model_maker_code', $makerCodes))
@@ -216,6 +215,7 @@ class MotobikeModel
 
         $stm = $queryBuilder->execute();
         $makerNames = $stm->fetchAll(PDO::FETCH_COLUMN);
+
         return $makerNames;
     }
 
@@ -240,7 +240,7 @@ class MotobikeModel
             ORDER BY model_kana_prefix;
         */
 
-        $conn = Connection::getConnection();
+        $conn = Connection::getConnection('Db');
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select(
                             'model_name',

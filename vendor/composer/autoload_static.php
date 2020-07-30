@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c
+class ComposerStaticInitfb0d9aebe14107e7a5d550af7703051f
 {
     public static $files = array (
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
@@ -24,8 +24,8 @@ class ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c
         ),
         'T' => 
         array (
-            'Twig\\Tests\\' => 11,
             'Twig\\' => 5,
+            'Test\\' => 5,
         ),
         'S' => 
         array (
@@ -35,15 +35,6 @@ class ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c
         'P' => 
         array (
             'Prophecy\\' => 9,
-        ),
-        'F' => 
-        array (
-            'Faker\\Test\\' => 11,
-            'Faker\\' => 6,
-        ),
-        'E' => 
-        array (
-            'Envms\\FluentPDO\\' => 16,
         ),
         'D' => 
         array (
@@ -70,14 +61,14 @@ class ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
-        'Twig\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/vendor/twig/twig/tests',
-        ),
         'Twig\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/vendor/twig/twig/src',
             1 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
+        'Test\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/test',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
@@ -90,19 +81,6 @@ class ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c
         'Prophecy\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
-        ),
-        'Faker\\Test\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/vendor/fzaninotto/faker/test/Faker',
-        ),
-        'Faker\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/vendor/fzaninotto/faker/src/Faker',
-            1 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
-        ),
-        'Envms\\FluentPDO\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/envms/fluentpdo/src',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
@@ -812,9 +790,9 @@ class ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit0ad7cb6974a8c055f3a99db2f7fb781c::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitfb0d9aebe14107e7a5d550af7703051f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitfb0d9aebe14107e7a5d550af7703051f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitfb0d9aebe14107e7a5d550af7703051f::$classMap;
 
         }, null, ClassLoader::class);
     }

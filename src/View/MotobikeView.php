@@ -21,12 +21,12 @@
                 'kanaPrefixHeader'        => $this->model->kanaPrefixHeader(), 
                 'namePrefixHeader'        => $this->model->namePrefixHeader(),
                 'motoDisplacementHeader'  => $this->model->motoDisplacementHeader(),
-                'markerHeader'            => $this->model->markerHeader(),
+                'markerHeader'            => $this->model->markerHeader('Db'),
 
-                'kanaPrefixHasModel'      => $this->model->kanaPrefixHasModel(),
-                'namePrefixHasModel'      => $this->model->namePrefixHasModel(),
-                'displacementHasModel'    => $this->model->displacementHasModel(),
-                'markerHasModel'          => $this->model->markerHasModel()
+                'kanaPrefixHasModel'      => $this->model->kanaPrefixHasModel('Db'),
+                'namePrefixHasModel'      => $this->model->namePrefixHasModel('Db'),
+                'displacementHasModel'    => $this->model->displacementHasModel('Db'),
+                'markerHasModel'          => $this->model->markerHasModel('Db')
               ]);
         }
 

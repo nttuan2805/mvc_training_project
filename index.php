@@ -6,6 +6,7 @@ use App\Lib\Router;
 use App\Controller\MotobikeController;
 use App\Model\MotobikeModel;
 use App\View\MotobikeView;
+use App\Test\MotobikeModelTest;
 
 Router::get('/', function () {
     (new MotobikeController())->filterIndex();
