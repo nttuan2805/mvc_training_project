@@ -14,9 +14,13 @@ table, th, td {
 }
 
 a:link {
-  color: green;
+  color:black;
   background-color: transparent;
   text-decoration: none;
+}
+
+a.filter {
+  color: red;
 }
 
 a.disabled {
@@ -26,3 +30,47 @@ a.disabled {
   cursor: not-allowed;
   text-decoration: none;
 }
+
+.disableLink {
+  color: currentColor;
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+#footer {
+  background: rgb(141, 141, 156);
+  padding: 20px;
+}
+
+#header {
+  padding: 20px;
+  background: rgb(85, 161, 167);
+}
+
+.motobikeInfo {
+  float: right;
+  margin: 0px 10px;
+}
+
+.motobikeResult {
+  margin-top: 20px;
+  text-align: center;
+}
+
+td.notdata {
+  color: red;
+}
+
+.buttonCheck {
+  text-align: center;
+  margin: 10px;
+}
+
+input[type="button"] {
+  background-color:blue;
+  color:white;
+  text-align: center;
+}
+

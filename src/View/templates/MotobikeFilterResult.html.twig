@@ -1,0 +1,35 @@
+{% if result is empty %}
+    <table id="motobikeResult">
+        <tr>
+            <td  class="notdata">The result is empty</td>
+        </tr>
+    </table>
+{% else %}
+    {% set rowsNumPerTable = 40 %}
+    {% set colsNumPerRow = 4 %}
+
+    
+    {% for table in result|batch(rowsNumPerTable, '') %}
+    <table class="motobikeResult">
+        {% for row in table|batch(colsNumPerRow, '') %}
+            <tr>
+                {% for column in row %}
+                    {% if (column != '') %}
+                    <td>
+                        <a href=""><img src="{{ column.model_image_url }}"></a>
+                        <div class="motobikeInfo">
+                            <h4>{{ column.model_hyouji }} ({{ column.model_count }})</h4>
+                            <p>{{ column.model_kakaku_min }} - {{ column.model_kakaku_max }} </p>
+                        </div>
+                    </td>
+                    {% endif %}        
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+    <div class="buttonCheck">
+        <input type="button" value="チェックした車両で検索" />
+    </div>
+    {% endfor %}
+{% endif %}

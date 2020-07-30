@@ -1,0 +1,89 @@
+{{ include('header.html') }}
+
+<table>
+<tr>
+    <th>頭文字</th>
+    <td id="kanaPrefix">
+        {% for kanaPrefix in kanaPrefixHeader %}
+            {% if kanaPrefix == 'a' %}
+                {% set kanaJP = 'ア' %}
+            {% elseif kanaPrefix == 'ka' %}
+                {% set kanaJP = 'カ' %}
+            {% elseif kanaPrefix == 'sa' %}
+                {% set kanaJP = 'サ' %}
+            {% elseif kanaPrefix == 'ta' %}
+                {% set kanaJP = 'タ' %}
+            {% elseif kanaPrefix == 'na' %}
+                {% set kanaJP = 'ナ' %}
+            {% elseif kanaPrefix == 'ha' %}
+                {% set kanaJP = 'ハ' %}
+            {% elseif kanaPrefix == 'ma' %}
+                {% set kanaJP = 'マ' %}
+            {% elseif kanaPrefix == 'ya' %}
+                {% set kanaJP = 'ヤ' %}
+            {% elseif kanaPrefix == 'ra' %}
+                {% set kanaJP = 'ラ' %}
+            {% else %}
+                {% set kanaJP = 'ワ' %}
+            {% endif %}
+
+            {% if kanaPrefix not in kanaPrefixHasModel %}
+                {% set hasOrNotdisabled = 'class=disabled' %}
+            {% else %}
+                {% set hasOrNotdisabled = '' %}
+            {% endif %}
+            <a class="kanaPrefixLink" href='{{ kanaPrefix }}' {{ hasOrNotdisabled }}>{{ kanaJP }}行&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        {% endfor %}
+    </td>
+</tr>
+<tr>
+    <th>英数字</th>
+    <td id="namePrefix">
+        {% for namePrefix in namePrefixHeader %}
+            {% if namePrefix not in namePrefixHasModel %}
+                {% set hasOrNotdisabled = 'class=disabled' %}
+            {% else %}
+                {% set hasOrNotdisabled = '' %}
+            {% endif %}
+            <a class="namePrefixLink" href='{{ namePrefix }}' {{ hasOrNotdisabled }}>{{ namePrefix }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        {% endfor %}
+    </td>
+</tr>
+<tr>
+    <th>排気量</th>
+    <td id="motoDisplace">
+        {% for motoDisplace in motoDisplacementHeader %}
+            {% if motoDisplace not in displacementHasModel %}
+                {% set hasOrNotdisabled = 'class=disabled' %}
+            {% else %}
+                {% set hasOrNotdisabled = '' %}
+            {% endif %}
+            <a href='{{ motoDisplace }}' {{ hasOrNotdisabled }}>{{ motoDisplace }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        {% endfor %}
+    </td>
+</tr>
+<tr>
+    <th>メーカー</th>
+    <td id="marker">
+        {% for marker in markerHeader %}
+            {% if marker.model_maker_code not in markerHasModel %}
+                {% set hasOrNotdisabled = 'class=disabled' %}
+            {% else %}
+                {% set hasOrNotdisabled = '' %}
+            {% endif %}
+            <a href='{{ marker.model_maker_code }}' {{ hasOrNotdisabled }}>{{ marker.model_maker_hyouji }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        {% endfor %}
+    </td>
+</tr>
+</table>
+
+<input type="hidden" id="kanaPrefixFilter" name="kanaPrefixFilter" value="" />
+<input type="hidden" id="namePrefixFilter" name="namePrefixFilter" value="" />
+<input type="hidden" id="motoDisplacement"     name="motoDisplacement"     value="" />
+<input type="hidden" id="modelMakerCode" name="modelMakerCode" value="" />
+
+<div id="response">
+
+</div>
+
+{{ include('footer.html') }}
